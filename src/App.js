@@ -14,6 +14,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      flips: 0,
       pancakesInStack: DEFAULT_SETTINGS.pancakesInStack,
       pancakesAreBurnt: DEFAULT_SETTINGS.pancakesAreBurnt,
       pancakesAreUniqueSizes: DEFAULT_SETTINGS.pancakesAreUniqueSizes,
@@ -35,6 +36,7 @@ class App extends Component {
       flippingStack = flippingStack.map(value => -value);
     }
     this.setState({
+      flips: this.state.flips + 1,
       pancakes: flippingStack.concat(restOfStack)
     });
   }
@@ -43,6 +45,7 @@ class App extends Component {
     return (
       <div>
         <PancakeStack pancakes={this.state.pancakes} onClick={(i) => this.flipPancake(i)} />
+        <div> Number of flips: {this.state.flips}</div>
       </div>
     );
   }
