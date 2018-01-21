@@ -21,10 +21,28 @@ class App extends Component {
     };
   }
 
+  flipPancake(i) {
+    // flip pancake up to i in the stack
+    // EXAMPLE:
+    //   pancakes [3,2,5,1,4]
+    //   flipPancake(3)
+    //   pancakes [5,2,3,1,4]
+    // if pancakesAreBurnt is true, we will also flip the sign
+    let flippingStack = this.state.pancakes.slice(0, i + 1);
+    const restOfStack = this.state.pancakes.slice(i + 1);
+    flippingStack.reverse();
+    if (this.state.pancakesAreBurnt) {
+      flippingStack = flippingStack.map(value => -value);
+    }
+    this.setState({
+      pancakes: flippingStack.concat(restOfStack)
+    });
+  }
+
   render() {
     return (
       <div>
-        <PancakeStack pancakes={this.state.pancakes} />
+        <PancakeStack pancakes={this.state.pancakes} onClick={(i) => this.flipPancake(i)} />
       </div>
     );
   }

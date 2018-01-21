@@ -12,6 +12,7 @@ function Pancake(props) {
     <div
       className={'pancake ' + (props.isBurnt ? 'is-burnt' : '')}
       style={style}
+      onClick={props.onClick}
     />
   );
 }

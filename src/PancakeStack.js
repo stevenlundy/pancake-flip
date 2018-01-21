@@ -11,6 +11,7 @@ function PancakeStack(props) {
           key={i}
           size={getPancakeSize(pancake)}
           isBurnt={isPancakeBurnt(pancake)}
+          onClick={() => props.onClick(i)}
         />)
       )}
     </div>
