@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PancakeStack from './PancakeStack';
 
-import {shuffle} from './helpers';
+import {shuffle, isPancakeBurnt, getPancakeSize} from './helpers';
 
 import './App.css';
 
@@ -31,6 +31,9 @@ class App extends Component {
     //   flipPancake(3)
     //   pancakes [5,2,3,1,4]
     // if pancakesAreBurnt is true, we will also flip the sign
+    if (isStackCorrect(this.state.pancakes)) {
+      return;
+    }
     let flippingStack = this.state.pancakes.slice(0, i + 1);
     const restOfStack = this.state.pancakes.slice(i + 1);
     flippingStack.reverse();
@@ -44,10 +47,12 @@ class App extends Component {
   }
 
   render() {
+    const stackIsCorrect = isStackCorrect(this.state.pancakes);
     return (
       <div>
         <PancakeStack pancakes={this.state.pancakes} onClick={(i) => this.flipPancake(i)} />
         <div> Number of flips: {this.state.flips}</div>
+        <div> {stackIsCorrect ? 'Ready to serve!' : ''}</div>
       </div>
     );
   }
@@ -70,6 +75,18 @@ function generatePancakeStack(number, areBurnt, areUniqueSizes) {
   }
 
   return pancakes;
+}
+
+function isStackCorrect(pancakes) {
+  if (pancakes.some(isPancakeBurnt)) {
+    return false;
+  }
+  for (let i = 1; i < pancakes.length; i++) {
+    if (getPancakeSize(pancakes[i]) < getPancakeSize(pancakes[i - 1])) {
+      return false;
+    }
+  }
+  return true;
 }
 
 export default App;
