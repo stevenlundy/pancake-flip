@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PancakeStack from './PancakeStack';
 
+import {shuffle} from './helpers';
+
 import './App.css';
 
 const DEFAULT_SETTINGS = {
@@ -68,17 +70,6 @@ function generatePancakeStack(number, areBurnt, areUniqueSizes) {
   }
 
   return pancakes;
-}
-
-function shuffle(arr) {
-  // shuffle an array in place
-  for (let i = 1; i < arr.length; i++) {
-    let swapPos = Math.floor(Math.random() * (i + 1));
-    let tmp = arr[swapPos];
-    arr[swapPos] = arr[i];
-    arr[i] = tmp;
-  }
-  return arr;
 }
 
 export default App;

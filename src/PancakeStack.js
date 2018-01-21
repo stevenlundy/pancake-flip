@@ -1,6 +1,8 @@
 import React from 'react';
 import Pancake from './Pancake';
 
+import {isPancakeBurnt, getPancakeSize} from './helpers';
+
 import './PancakeStack.css';
 
 function PancakeStack(props) {
@@ -16,14 +18,6 @@ function PancakeStack(props) {
       )}
     </div>
   );
-}
-
-function isPancakeBurnt(pancake) {
-  return pancake < 0;
-}
-
-function getPancakeSize(pancake) {
-  return Math.abs(pancake);
 }
 
 export default PancakeStack;
