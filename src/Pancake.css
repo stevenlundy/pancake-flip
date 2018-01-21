@@ -1,0 +1,10 @@
+.pancake {
+    border: 1px solid #000;
+    border-radius: 5px;
+    height: 10px;
+    background-color: #dda;
+}
+
+.pancake.is-burnt {
+    background-color: #655;
+}
