@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PancakeStack from './PancakeStack';
+import Settings from './Settings';
 
 import {shuffle, isPancakeBurnt, getPancakeSize} from './helpers';
 
@@ -17,11 +18,26 @@ class App extends Component {
     super(props);
     this.state = {
       flips: 0,
-      pancakesInStack: DEFAULT_SETTINGS.pancakesInStack,
-      pancakesAreBurnt: DEFAULT_SETTINGS.pancakesAreBurnt,
-      pancakesAreUniqueSizes: DEFAULT_SETTINGS.pancakesAreUniqueSizes,
+      settings: Object.assign({}, DEFAULT_SETTINGS),
       pancakes: generatePancakeStack(DEFAULT_SETTINGS.pancakesInStack, DEFAULT_SETTINGS.pancakesAreBurnt, DEFAULT_SETTINGS.pancakesAreUniqueSizes)
     };
+  }
+
+  openSettings() {
+    this.setState({showSettings: true});
+  }
+
+  closeSettings() {
+    this.setState({showSettings: false});
+  }
+
+  saveSettings(settings) {
+    this.setState({
+      flips: 0,
+      settings: settings,
+      pancakes: generatePancakeStack(settings.pancakesInStack, settings.pancakesAreBurnt, settings.pancakesAreUniqueSizes),
+      showSettings: false
+    });
   }
 
   flipPancake(i) {
@@ -37,7 +53,7 @@ class App extends Component {
     let flippingStack = this.state.pancakes.slice(0, i + 1);
     const restOfStack = this.state.pancakes.slice(i + 1);
     flippingStack.reverse();
-    if (this.state.pancakesAreBurnt) {
+    if (this.state.settings.pancakesAreBurnt) {
       flippingStack = flippingStack.map(value => -value);
     }
     this.setState({
@@ -53,6 +69,12 @@ class App extends Component {
         <PancakeStack pancakes={this.state.pancakes} onClick={(i) => this.flipPancake(i)} />
         <div> Number of flips: {this.state.flips}</div>
         <div> {stackIsCorrect ? 'Ready to serve!' : ''}</div>
+        <button onClick={() => this.openSettings()}>New Game</button>
+        {this.state.showSettings && <Settings
+          currentSettings={this.state.settings}
+          onSave={(i) => this.saveSettings(i)}
+          onCancel={() => this.closeSettings()}
+        />}
       </div>
     );
   }
