@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PancakeStack from './PancakeStack';
 import Settings from './Settings';
+import Modal from './Modal';
 
 import {shuffle, isPancakeBurnt, getPancakeSize} from './helpers';
 
@@ -70,11 +71,15 @@ class App extends Component {
         <div> Number of flips: {this.state.flips}</div>
         <div> {stackIsCorrect ? 'Ready to serve!' : ''}</div>
         <button onClick={() => this.openSettings()}>New Game</button>
-        {this.state.showSettings && <Settings
-          currentSettings={this.state.settings}
-          onSave={(i) => this.saveSettings(i)}
-          onCancel={() => this.closeSettings()}
-        />}
+        {this.state.showSettings &&
+          <Modal onCloseModal={() => this.closeSettings()}>
+            <Settings
+              currentSettings={this.state.settings}
+              onSave={(i) => this.saveSettings(i)}
+              onCancel={() => this.closeSettings()}
+            />
+          </Modal>
+        }
       </div>
     );
   }
