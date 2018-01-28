@@ -20,7 +20,9 @@ class App extends Component {
     this.state = {
       flips: 0,
       settings: Object.assign({}, DEFAULT_SETTINGS),
-      pancakes: generatePancakeStack(DEFAULT_SETTINGS.pancakesInStack, DEFAULT_SETTINGS.pancakesAreBurnt, DEFAULT_SETTINGS.pancakesAreUniqueSizes)
+      history: [{
+        pancakes: generatePancakeStack(DEFAULT_SETTINGS.pancakesInStack, DEFAULT_SETTINGS.pancakesAreBurnt, DEFAULT_SETTINGS.pancakesAreUniqueSizes)
+      }]
     };
   }
 
@@ -36,7 +38,9 @@ class App extends Component {
     this.setState({
       flips: 0,
       settings: settings,
-      pancakes: generatePancakeStack(settings.pancakesInStack, settings.pancakesAreBurnt, settings.pancakesAreUniqueSizes),
+      history: [{
+        pancakes: generatePancakeStack(settings.pancakesInStack, settings.pancakesAreBurnt, settings.pancakesAreUniqueSizes)
+      }],
       showSettings: false
     });
   }
@@ -48,27 +52,49 @@ class App extends Component {
     //   flipPancake(3)
     //   pancakes [5,2,3,1,4]
     // if pancakesAreBurnt is true, we will also flip the sign
-    if (isStackCorrect(this.state.pancakes)) {
+    const history = this.state.history;
+    const current = history[this.state.flips];
+    const currentPancakeStack = current.pancakes;
+
+    if (isStackCorrect(currentPancakeStack)) {
       return;
     }
-    let flippingStack = this.state.pancakes.slice(0, i + 1);
-    const restOfStack = this.state.pancakes.slice(i + 1);
+    let flippingStack = currentPancakeStack.slice(0, i + 1);
+    const restOfStack = currentPancakeStack.slice(i + 1);
     flippingStack.reverse();
     if (this.state.settings.pancakesAreBurnt) {
       flippingStack = flippingStack.map(value => -value);
     }
     this.setState({
       flips: this.state.flips + 1,
-      pancakes: flippingStack.concat(restOfStack)
+      history: [...history, {
+        pancakes: flippingStack.concat(restOfStack)
+      }]
+    });
+  }
+
+  undoLastFlip() {
+    if (!this.state.flips) {
+      return;
+    }
+    this.setState({
+      flips: this.state.flips - 1,
+      history: this.state.history.slice(0, -1)
     });
   }
 
   render() {
-    const stackIsCorrect = isStackCorrect(this.state.pancakes);
+    const history = this.state.history;
+    const current = history[this.state.flips];
+    const currentPancakeStack = current.pancakes;
+    const stackIsCorrect = isStackCorrect(currentPancakeStack);
     return (
       <div>
-        <PancakeStack pancakes={this.state.pancakes} onClick={(i) => this.flipPancake(i)} />
-        <div> Number of flips: {this.state.flips}</div>
+        <PancakeStack pancakes={currentPancakeStack} onClick={(i) => this.flipPancake(i)} />
+        <div>
+          Number of flips: {this.state.flips}
+          <button onClick={() => this.undoLastFlip()} disabled={!this.state.flips}> Undo</button>
+        </div>
         <div> {stackIsCorrect ? 'Ready to serve!' : ''}</div>
         <button onClick={() => this.openSettings()}>New Game</button>
         {this.state.showSettings &&
